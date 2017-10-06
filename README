@@ -1,0 +1,19 @@
+Script docker_ce_install.sh will  install docker on Amazon AWS Ubuntu server.
+
+Next is to create user and group than logout the session and login back again.
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+To check docker is accessible into your user
+
+run
+> docker ps
+
+you should see
+ubuntu@############:~$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+Empty list
+
+Good to go.
