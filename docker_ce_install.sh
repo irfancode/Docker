@@ -1,92 +1,25 @@
 #!/bin/bash
-############################################################################
-#
-# Usage: sh docker_ce_install.sh
-#
-# Install docker ce on ubuntu 16.04
-#
-#
-# Options:
-#  -h     ... help message
-#  -d     ... consider only files modified within the last 100 days
-#  -w     ... consider only files modified within the last 12 weeks
-#
-#
-############################################################################
 
-help=0
-verb=0
-weeks=0
-# defaults
-days=0
-m=1
-str="days"
-getopts "hvd:w:" name
-while [ "$name" != "?" ] ; do
-  case $name in
-   h) help=1;;
-   v) verb=1;;
-   d) days=$OPTARG
-      m=$OPTARG
-      str="days";;
-   w) weeks=$OPTARG
-      m=$OPTARG
-      str="weeks";;
-  esac
-  getopts "hvd:w:" name
-done
+date "+DAY : %A%nDATE: %m/%d/%y%nTIME: %H:%M:%S"
 
-if [ $help -eq 1 ]
- then no_of_lines=`cat $0 | awk 'BEGIN { n = 0; } \
-                                 /^$/ { print n; \
-                                        exit; } \
-                                      { n++; }'`
-      echo "`head -$no_of_lines $0`"
-      exit
-fi
+sudo apt-get update
 
-shift $[ $OPTIND - 1 ]
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
 
-if [ $# -lt 1 ]
-then
-  echo "Usage: $0 file ..."
-  exit 1
-fi
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
 
-if [ $verb -eq 1 ]
-  then echo "$0 counts the lines of code"
-fi
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
 
-l=0
-n=0
-s=0
-for f in $*
-do
-  x=`stat -c "%y" $f`
-  # modification date
-  d=`date --date="$x" +%y%m%d`
-  # date of $m days/weeks ago
-  e=`date --date="$m $str ago" +%y%m%d`
-  # now
-  z=`date +%y%m%d`
-  #echo "Stat: $x; Now: $z; File: $d; $m $str ago: $e"
-  # checks whether file is more recent then req
-  if [ $d -ge $e -a $d -le $z ] # ToDo: fix year wrap-arounds
-  then
-      # be verbose if we found a recent file
-      if [ $verb -eq 1 ]
-        then echo "$f: modified (mmdd) $d"
-      fi
-      # do the line count
-      l=`wc -l $f | sed 's/^\([0-9]*\).*$/\1/'`
-      echo "$f: $l"
-      # increase the counters
-      n=$[ $n + 1 ]
-      s=$[ $s + $l ]
-  else
-      # not strictly necessary, because it's the end of the loop
-      continue
-  fi
-done
+sudo apt-get update
 
-echo "$n files in total, with $s lines in total"
+sudo apt-get install docker-ce
+
+sudo docker run hello-world
