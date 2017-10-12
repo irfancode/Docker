@@ -1,0 +1,39 @@
+docker ps
+docker ps -a
+docker login
+docker run tutum/hello-world
+docker run -p 8080:80 tutum/hello-world
+ubuntu@ip-172-31-27-193:~$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS                    PORTS
+        NAMES
+dc6c27b57de6        tutum/hello-world   "/bin/sh -c 'php-f..."   About a minute ago   Up About a minute         0.0.0.0:8080->8
+0/tcp   pedantic_newton
+09c1301cedd5        tutum/hello-world   "/bin/sh -c 'php-f..."   17 hours ago         Exited (0) 17 hours ago
+        vigilant_noether
+b38b1f67472e        hello-world         "/hello"                 19 hours ago         Exited (0) 19 hours ago
+        vigilant_visvesvaraya
+docker rm dc6c27b57de6
+docker rm 09c1301cedd5
+docker rm b38b1f67472e
+ubuntu@ip-172-31-27-193:~$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+ubuntu@ip-172-31-27-193:~$
+
+
+ubuntu@ip-172-31-27-193:~$ docker run -d --name web1 -p 8080:80 tutum/hello-world
+caaf5d872240b5ab1eab4253b9f32c9f277b1442a03fde8b717caf4f313a8f6c
+ubuntu@ip-172-31-27-193:~$ docker run -d --name web2 -p 8081:80 tutum/hello-world
+f630d2ac939cf7f945639c4d4027956821eb0e3463c4869e9535976ac67bbfba
+ubuntu@ip-172-31-27-193:~$ docker run -d --name web3 -p 8082:80 tutum/hello-world
+d9d1a2cf4a7664af8ce599631fc7d823c65e2ebc407903b6d735d0adb1a34033
+ubuntu@ip-172-31-27-193:~$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS
+ NAMES
+d9d1a2cf4a76        tutum/hello-world   "/bin/sh -c 'php-f..."   5 seconds ago       Up 4 seconds        0.0.0.0:8082->80/tcp
+ web3
+f630d2ac939c        tutum/hello-world   "/bin/sh -c 'php-f..."   14 seconds ago      Up 13 seconds       0.0.0.0:8081->80/tcp
+ web2
+caaf5d872240        tutum/hello-world   "/bin/sh -c 'php-f..."   35 seconds ago      Up 35 seconds       0.0.0.0:8080->80/tcp
+ web1
+
+ 
